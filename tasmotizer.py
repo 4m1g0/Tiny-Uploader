@@ -24,7 +24,7 @@ import firmwareURL
 from gui import HLayout, VLayout, GroupBoxH, GroupBoxV, SpinBox, dark_palette
 from utils import MODULES, NoBinFile, NetworkError
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 BINS_URL = 'http://ota.tasmota.com'
 

@@ -23,8 +23,8 @@ jobs:
           python -m PyInstaller tasmotizer.spec
       - uses: actions/upload-artifact@v2
         with:
-          name: Windows_tasmotizer
-          path: dist/tasmotizer-1.2.1.exe
+          name: Windows_tinygs_uploader
+          path: dist/tinygs-uploader-0.2.exe
 
   build-windows-x86:
     runs-on: windows-2019
@@ -44,8 +44,8 @@ jobs:
           python -m PyInstaller tasmotizer32.spec
       - uses: actions/upload-artifact@v2
         with:
-          name: Windows_tasmotizer32
-          path: dist/tasmotizer-1.2.1-x86.exe
+          name: Windows_tinygs_uploader32
+          path: dist/tinygs-uploader-0.2-x86.exe
 
   build-ubuntu:
     runs-on: ubuntu-20.04
@@ -65,13 +65,13 @@ jobs:
       - name: See dist directory
         run: ls dist
       - name: 'Tar files'
-        run: gzip dist/tasmotizer-1.2.1
+        run: gzip dist/tinygs-uploader-0.2
       - name: 'show gzip'
         run: ls dist
       - uses: actions/upload-artifact@v2
         with:
           name: Ubuntu
-          path: dist/tasmotizer-1.2.1.gz
+          path: dist/tinygs-uploader-0.2.gz
 
 
   build-macos:
@@ -93,7 +93,7 @@ jobs:
         run: ls dist
       - name: Move app
         run: |
-          mv dist/tasmotizer-1.2.1.app dist/tasmotizer-1.2.1-dev-macOS.app
+          mv dist/tinygs-uploader-0.2.app dist/tinygs-uploader-0.2-dev-macOS.app
       - name: 'Tar files'
         run: tar -cvf dist.tar dist/*
       - name: 'Upload Artifact'

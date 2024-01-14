@@ -4,7 +4,7 @@ block_cipher = None
 
 a = Analysis(['tasmotizer.py'],
              binaries=[],
-             datas=[('utils.py', '.'), ('banner.py', '.'), ('gui.py', '.'), ('tasmotizer_esptool.py', '.')],
+             datas=[('utils.py', '.'), ('banner.py', '.'), ('gui.py', '.')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -21,12 +21,12 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='tasmotizer-1.2.1',
+          name='tinygs-uploader-0.2',
           debug=False,
           strip=False,
           upx=True,
           console=False , icon='icon-256.icns')
 app = BUNDLE(exe,
-             name='tasmotizer-1.2.1.app',
+             name='tinygs-uploader-0.2.app',
              icon='icon-256.icns',
-             bundle_identifier='com.tasmota.tasmotizer')
+             bundle_identifier='com.tinygs.uploader')
