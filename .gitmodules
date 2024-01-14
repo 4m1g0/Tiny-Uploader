@@ -1,4 +1,0 @@
-[submodule "esptool"]
-	path = esptool
-    url=https://github.com/gmag11/esptool.git
-	branch = tasmotizer
