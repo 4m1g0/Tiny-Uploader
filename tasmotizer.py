@@ -746,7 +746,7 @@ class Tasmotizer(QDialog):
                 
                 if chip == 'ESP32':
                     self.file_path = firmwareURL.URL_ESP32S
-                elif chip == 'ESP32S3':
+                elif chip == 'ESP32-S3':
                     self.file_path = firmwareURL.URL_ESP32S3
                 else:
                     raise Exception('Chip: {} is not supported'.format(chip))
