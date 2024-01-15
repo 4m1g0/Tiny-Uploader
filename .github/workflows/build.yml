@@ -1,8 +1,8 @@
 name: Build Workflow
 
 on:
-  push:
-#    branches: master
+  release:
+    types: [published]
 
 jobs:
   build-windows:
@@ -25,6 +25,15 @@ jobs:
         with:
           name: Windows_tinygs_uploader
           path: dist/tinygs-uploader-0.2.exe
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/tinygs-uploader-0.2.exe
+          asset_name: tinygs-uploader-0.2.exe
+          asset_content_type: application/octet-stream
 
   build-windows-x86:
     runs-on: windows-2019
@@ -46,6 +55,15 @@ jobs:
         with:
           name: Windows_tinygs_uploader32
           path: dist/tinygs-uploader-0.2-x86.exe
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/tinygs-uploader-0.2-x86.exe
+          asset_name: tinygs-uploader-0.2-x86.exe
+          asset_content_type: application/octet-stream
 
   build-ubuntu:
     runs-on: ubuntu-20.04
@@ -72,7 +90,15 @@ jobs:
         with:
           name: Ubuntu
           path: dist/tinygs-uploader-0.2.gz
-
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/tinygs-uploader-0.2.gz
+          asset_name: tinygs-uploader-0.2.gz
+          asset_content_type: application/octet-stream
 
   build-macos:
     runs-on: macOS-latest
@@ -101,3 +127,12 @@ jobs:
         with:
           name: macOS
           path: dist.tar
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/dist.tar
+          asset_name: tinygs-uploader-0.2-macOS.tar
+          asset_content_type: application/octet-stream
