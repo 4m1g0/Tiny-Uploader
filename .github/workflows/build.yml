@@ -1,0 +1,138 @@
+name: Build Workflow
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-windows:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt -r requirements_build.txt
+      - name: Run PyInstaller
+        run: |
+          python -m PyInstaller tasmotizer.spec
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Windows_tinygs_uploader
+          path: dist/tinygs-uploader-0.2.exe
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/tinygs-uploader-0.2.exe
+          asset_name: tinygs-uploader-0.2.exe
+          asset_content_type: application/octet-stream
+
+  build-windows-x86:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+          architecture: 'x86'
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt -r requirements_build.txt
+      - name: Run PyInstaller
+        run: |
+          python -m PyInstaller tasmotizer32.spec
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Windows_tinygs_uploader32
+          path: dist/tinygs-uploader-0.2-x86.exe
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/tinygs-uploader-0.2-x86.exe
+          asset_name: tinygs-uploader-0.2-x86.exe
+          asset_content_type: application/octet-stream
+
+  build-ubuntu:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt -r requirements_build.txt
+      - name: Run PyInstaller
+        run: |
+          python -m PyInstaller tasmotizer.spec
+      - name: See dist directory
+        run: ls dist
+      - name: 'Tar files'
+        run: gzip dist/tinygs-uploader-0.2
+      - name: 'show gzip'
+        run: ls dist
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Ubuntu
+          path: dist/tinygs-uploader-0.2.gz
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/tinygs-uploader-0.2.gz
+          asset_name: tinygs-uploader-0.2.gz
+          asset_content_type: application/octet-stream
+
+  build-macos:
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt -r requirements_build.txt
+      - name: Run PyInstaller
+        run: |
+          python -m PyInstaller tasmotizer_mac.spec
+      - name: See dist directory
+        run: ls dist
+      - name: Move app
+        run: |
+          mv dist/tinygs-uploader-0.2.app dist/tinygs-uploader-0.2-dev-macOS.app
+      - name: 'Tar files'
+        run: tar -cvf dist.tar dist/*
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: macOS
+          path: dist.tar
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist.tar
+          asset_name: tinygs-uploader-0.2-macOS.tar
+          asset_content_type: application/octet-stream

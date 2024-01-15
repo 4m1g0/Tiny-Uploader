@@ -5,7 +5,8 @@ from time import sleep
 
 import serial
 
-import tasmotizer_esptool as esptool
+import esptool
+
 import json
 
 from datetime import datetime
@@ -23,7 +24,7 @@ import firmwareURL
 from gui import HLayout, VLayout, GroupBoxH, GroupBoxV, SpinBox, dark_palette
 from utils import MODULES, NoBinFile, NetworkError
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 BINS_URL = 'http://ota.tasmota.com'
 
@@ -36,7 +37,7 @@ class ESPWorker(QObject):
     def __init__(self, port, actions, **params):
         super().__init__()
         self.command = [
-                      '--chip', 'esp32',
+                      #'--chip', 'esp32',
                       '--port', port,
                       '--baud', '115200'
             ]
@@ -734,7 +735,22 @@ class Tasmotizer(QDialog):
     def start_process(self):
         try:
             if self.mode == 0:
-                self.file_path = firmwareURL.URL
+
+                # detect ESP chip with esp tool and get the result in a variable
+                # esptool_result = esptool.main(['--port', self.cbxPort.currentData(), 'chip_id'])
+                #esptool_result = esptool.ESPLoader.detect_chip(port = self.cbxPort.currentData())
+                esptool_result = esptool.detect_chip(port = self.cbxPort.currentData())
+                chip = esptool_result.CHIP_NAME
+                # This closed the port. I should not use a private method here :(((
+                esptool_result._port.close()
+                
+                if chip == 'ESP32':
+                    self.file_path = firmwareURL.URL_ESP32S
+                elif chip == 'ESP32-S3':
+                    self.file_path = firmwareURL.URL_ESP32S3
+                else:
+                    raise Exception('Chip: {} is not supported'.format(chip))
+                
                 #if len(self.file.text()) > 0:
                 #    self.file_path = self.file.text()
                 #    self.settings.setValue('bin_file', self.file_path)
@@ -770,7 +786,8 @@ class Tasmotizer(QDialog):
             QMessageBox.critical(self, 'Image path missing', 'Select a binary to write, or select a different mode.')
         except NetworkError as e:
             QMessageBox.critical(self, 'Network error', e.message)
-
+        except Exception as e:
+            QMessageBox.critical(self, 'Error', str(e))
 
 def main():
     app = QApplication(sys.argv)
