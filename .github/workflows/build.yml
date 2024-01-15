@@ -133,6 +133,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./dist/dist.tar
+          asset_path: dist/dist.tar
           asset_name: tinygs-uploader-0.2-macOS.tar
           asset_content_type: application/octet-stream
