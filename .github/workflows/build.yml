@@ -126,7 +126,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: macOS
-          path: dist.tar
+          path: dist/dist.tar
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
